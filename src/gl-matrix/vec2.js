@@ -367,6 +367,46 @@ export function cross(out, a, b) {
 };
 
 /**
+ * Computes the cross product of two vec2's
+ * Returns the z-component of the result
+ *
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {int} crossProd
+ */
+export function crossScalar(a, b) {
+  return a[0] * b[1] - a[1] * b[0];
+};
+
+/**
+ * Gives the signed angle between two vec2s
+ * Assumes x right, y up, +theta is CCW from +x
+ * Gives angle from a to b
+ *
+ */
+export function getAngle(a, b) {
+  let magnitudes = Math.sqrt(sqrLen(a) * sqrLen(b));
+  let sin = crossScalar(a,b) / magnitudes;
+  let cos = dot(a,b) / magnitudes;
+
+  let angle;
+
+  //we want to use the component closes to 0, because then it has highest slope, greater accuracy
+  if (Math.abs(sin) < Math.abs(cos)) { // determine by sin
+    angle = Math.asin(sin);
+    if(cos < 0)
+      { angle = Math.PI - angle; } // if needs to be flipped
+  } else { // determine by cos
+    angle = Math.acos(cos);
+    if(sin < 0)
+      { angle = 2*Math.PI - angle; } //if needs to be flipped
+  }
+
+  //now normalise the angle. Angle may be less than 0, shift it into [0,2PI)
+  return angle >= 0 ? angle : angle + (Math.PI * 2);
+}
+
+/**
  * Performs a linear interpolation between two vec2's
  *
  * @param {vec2} out the receiving vector
