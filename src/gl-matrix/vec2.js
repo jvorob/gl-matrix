@@ -372,7 +372,7 @@ export function cross(out, a, b) {
  *
  * @param {vec2} a the first operand
  * @param {vec2} b the second operand
- * @returns {int} crossProd
+ * @returns {number} crossProd The cross product
  */
 export function crossScalar(a, b) {
   return a[0] * b[1] - a[1] * b[0];
@@ -382,7 +382,9 @@ export function crossScalar(a, b) {
  * Gives the signed angle between two vec2s
  * Assumes x right, y up, +theta is CCW from +x
  * Gives angle from a to b
- *
+ * @param {vec2} a the start vector
+ * @param {vec2} b the end vector
+ * @returns {number} the angle in radians mod 2PI from a to b (or 0 if undefined)
  */
 export function getAngle(a, b) {
   let magnitudes = Math.sqrt(sqrLen(a) * sqrLen(b));
@@ -404,6 +406,22 @@ export function getAngle(a, b) {
 
   //now normalise the angle. Angle may be less than 0, shift it into [0,2PI)
   return angle >= 0 ? angle : angle + (Math.PI * 2);
+}
+
+/**
+ * Rotates a given vector by the given number of radians
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the source vector
+ * @param {number} rad the number of radians to rotate CCW by (+x right, +y up)
+ * @returns {vec2} out
+ */
+export function rotateBy(out, a, rad) {
+  let s = Math.sin(rad);
+  let c = Math.cos(rad);
+  out[0] = a[0] * c - a[1] * s;
+  out[1] = a[0] * s + a[1] * c;
+  return out;
 }
 
 /**
